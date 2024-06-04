@@ -8,7 +8,7 @@ part of 'word.dart';
 
 Word _$WordFromJson(Map<String, dynamic> json) => Word(
       word: json['word'] as String,
-      phonetic: json['phonetic'] as String,
+      phonetic: json['phonetic'] as String?,
       phonetics: (json['phonetics'] as List<dynamic>)
           .map((e) => Phonetic.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -20,6 +20,6 @@ Word _$WordFromJson(Map<String, dynamic> json) => Word(
 Map<String, dynamic> _$WordToJson(Word instance) => <String, dynamic>{
       'word': instance.word,
       'phonetic': instance.phonetic,
-      'phonetics': instance.phonetics,
-      'meanings': instance.meanings,
+      'phonetics': instance.phonetics.map((e) => e.toJson()).toList(),
+      'meanings': instance.meanings.map((e) => e.toJson()).toList(),
     };

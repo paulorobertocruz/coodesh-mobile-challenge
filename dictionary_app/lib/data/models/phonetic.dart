@@ -5,11 +5,14 @@ part 'phonetic.g.dart';
 class Phonetic {
   Phonetic({
     this.audio,
+    required this.text,
   });
 
-  factory Phonetic.fromJson(Map<String, dynamic> json) => _$PhoneticFromJson(json);
+  factory Phonetic.fromJson(Map<String, dynamic> json) =>
+      _$PhoneticFromJson(json);
 
   final String? audio;
+  final String text;
 
   Map<String, dynamic> toJson() => _$PhoneticToJson(this);
 }

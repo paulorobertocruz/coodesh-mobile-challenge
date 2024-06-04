@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import 'models/word.dart';
+import '../models/word.dart';
 
 part 'rest_client.g.dart';
 

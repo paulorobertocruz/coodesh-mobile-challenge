@@ -1,30 +1,41 @@
-import 'package:dictionary_app/rest/rest_client.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class WordDetailPage extends StatelessWidget {
+import '../../../domain/usecases/word_usecase.dart';
+
+class WordDetailPage extends StatefulWidget {
   const WordDetailPage({
     super.key,
     required this.word,
+    required this.usecase,
   });
 
   final String word;
+  final WordUsecase usecase;
+
+  @override
+  State<WordDetailPage> createState() => _WordDetailPageState();
+}
+
+class _WordDetailPageState extends State<WordDetailPage> {
+  @override
+  void initState() {
+    widget.usecase.addHistory(widget.word);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final rest = RestClient(Dio());
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               Center(
-                child: Text(word),
+                child: Text(widget.word),
               ),
               FutureBuilder(
-                future: rest.word(word),
+                future: widget.usecase.getWord(widget.word),
                 builder: (context, snapshot) {
                   final data = snapshot.data;
 
@@ -43,8 +54,8 @@ class WordDetailPage extends StatelessWidget {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(child: Text(data.first.phonetic)),
-                      ...data.first.phonetics
+                      Center(child: Text(data.phonetic)),
+                      ...data.phonetics
                           .map((phonetic) => Text(phonetic.audio ?? "")),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -54,7 +65,7 @@ class WordDetailPage extends StatelessWidget {
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
-                      ...data.first.meanings.map(
+                      ...data.meanings.map(
                         (meaning) => Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -77,7 +88,8 @@ class WordDetailPage extends StatelessWidget {
                 },
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -87,6 +99,27 @@ class WordDetailPage extends StatelessWidget {
                       },
                       child: const Text("Voltar"),
                     ),
+                    FutureBuilder(
+                        future: widget.usecase.isFavorite(widget.word),
+                        builder: (context, snapshot) {
+                          final isFavorite = snapshot.data ?? false;
+
+                          return GestureDetector(
+                            onTap: () async {
+                              await widget.usecase
+                                  .toggleWordFavorite(widget.word);
+                              if (context.mounted) {
+                                context.pop();
+                              }
+                            },
+                            child: Icon(
+                              isFavorite
+                                  ? Icons.star
+                                  : Icons.star_border_outlined,
+                              color: isFavorite ? Colors.yellow : null,
+                            ),
+                          );
+                        }),
                     ElevatedButton(
                       onPressed: () {},
                       child: const Text("Proxima"),

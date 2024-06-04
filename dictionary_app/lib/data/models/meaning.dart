@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'definition.dart';
 part 'meaning.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Meaning {
   Meaning({
     required this.partOfSpeech,
