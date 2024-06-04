@@ -1,4 +1,9 @@
 # Mobile Challenge 20240202
+- Dictionary
+- Dicionario de ingles
+- Usando Flutter e dart
+- Com ambiente flutter configurado selecione um dispositivo movel como o android ou ios e use o cmd `flutter run -d ios` ou `flutter run -d android`
+
 
 ## Introdução
 
